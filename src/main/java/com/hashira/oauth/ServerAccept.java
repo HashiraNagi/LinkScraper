@@ -1,18 +1,28 @@
+package com.hashira.oauth;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
+/**
+ *Сервер на который придет authorization code
+ */
 public class ServerAccept implements Runnable {
 
-    static String code=null;
+    protected ServerAccept(){
 
-    public void startListening() throws IOException {
+    }
+
+    /**
+     *Метод, который прослушивает заданный порт
+     * @throws IOException
+     */
+    protected void startListening() throws IOException {
 
         ServerSocket serverSocket = new ServerSocket(1234);
 
             Socket clientSocket = serverSocket.accept();
-            System.out.println("accepte");
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             String line = bufferedReader.readLine();
             StringBuilder sb = new StringBuilder();
@@ -38,8 +48,7 @@ public class ServerAccept implements Runnable {
             temp = temp.substring(temp.indexOf("?code=") + 6);
             temp = temp.split("&")[0];
 
-            code = temp;
-            System.out.println(code);
+            OAuth.authorizationCode = temp;
 
             out.close();
             bufferedReader.close();
